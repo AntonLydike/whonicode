@@ -134,9 +134,9 @@ impl fmt::Display for Category {
 pub struct UnicodeDatum {
     pub cdpt: u32,          // unicode codepoint
     pub cat: Category,      // unicode category
-    val: i32,               // references the value in the unicode_values array
-    upper: i32,         // uppercase conversion
-    lower: i32,         // lowercase conversion
+    val: i32,               // references the value in the unicode_values array (-1 signifies absence)
+    upper: i32,         // uppercase conversion (-1 signifies absence)
+    lower: i32,         // lowercase conversion (-1 signifies absence)
 }
 
 impl UnicodeDatum {
@@ -149,20 +149,21 @@ impl UnicodeDatum {
     pub fn as_char(&self) -> char {
         return char::from_u32(self.cdpt).unwrap();
     }
-/*
-    pub fn upper_char(&self) -> Option<char> {
-        if self.upper == -1 {
-            return None
+
+    pub fn upper_char(&self) -> char {
+        match self.upper {
+            -1 => '-',
+            _  => char::from_u32(self.upper as u32).unwrap()
         }
-        return Some(char::from_u32(self.upper.into().unwrap()).unwrap());
     }
-    pub fn lower_char(&self) -> Option<char> {
-        if self.lower == -1 {
-            return None
+
+    pub fn lower_char(&self) -> char {
+        match self.lower {
+            -1 => '-',
+            _  => char::from_u32(self.lower as u32).unwrap()
         }
-        return Some(char::from_u32(self.lower.into().unwrap()).unwrap());
     }
- */
+
     pub fn value(&self) -> Option<&UnicodeDatumValue> {
         if self.val == -1 {
             return None;

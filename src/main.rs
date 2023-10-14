@@ -54,7 +54,7 @@ fn main() {
 
     // print header
     let _name = "Name";
-    println!("Symbol\t{_name:<max_name_len$}\tCat\tValue");
+    println!("Symbol\t{_name:<max_name_len$}\tCat\tValue\tL/Uppercase");
 
     for result in results {
         let res_info = &ucd::UNICODE_DATA[result.idx];
@@ -77,7 +77,7 @@ fn main() {
             None => "-".to_string()
         };
 
-        println!("{symb}\t{name:<max_name_len$}\t{}\t{value_str}", res_info.cat);
+        println!("{symb}\t{name:<max_name_len$}\t{}\t{value_str}\t{}/{}", res_info.cat, res_info.lower_char(), res_info.upper_char());
     }
 
     if (args.print_categories && categories.len() > 0) || hidden > 0{
