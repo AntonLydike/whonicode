@@ -71,7 +71,6 @@ def main(argv: list[str]):
     strings = []
 
     for line in iter_unicode_str_lines():
-        # line makeup:
         assert len(line) == 15
         num, name, cat, _, _, _, _, digit_val, val, _, _, _, upper, lower, _ = line        
         num = int(num, 16)

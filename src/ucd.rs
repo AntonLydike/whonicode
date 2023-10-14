@@ -1,8 +1,8 @@
-// The values in this field are abbreviations for the following. Some of the values are normative, and some are informative. For more information, see the Unicode Standard.
+use std::str::FromStr;
+use std::fmt;
 
-// Note: the standard does not assign information to control characters (except for certain cases in the Bidirectional Algorithm). Implementations will generally also assign categories to certain control characters, notably CR and LF, according to platform conventions.
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq, Hash, Clone)]
 pub enum Category {
     // Normative Categories
     Lu,     // Letter, Uppercase
@@ -46,6 +46,88 @@ impl Category {
             _ => true,
         }
     }
+
+    pub fn name(&self) -> &str {
+        match self {
+            Category::Lu => "Letter, Uppercase",
+            Category::Ll => "Letter, Lowercase",
+            Category::Lt => "Letter, Titlecase",
+            Category::Mn => "Mark, Non-Spacing",
+            Category::Mc => "Mark, Spacing Combining",
+            Category::Me => "Mark, Enclosing",
+            Category::Nd => "Number, Decimal Digit",
+            Category::Nl => "Number, Letter",
+            Category::No => "Number, Other",
+            Category::Zs => "Separator, Space",
+            Category::Zl => "Separator, Line",
+            Category::Zp => "Separator, Paragraph",
+            Category::Cc => "Other, Control",
+            Category::Cf => "Other, Format",
+            Category::Cs => "Other, Surrogate",
+            Category::Co => "Other, Private Use",
+            Category::Cn => "Other, Not Assigned (no characters in the file have this property)",
+            Category::Lm => "Letter, Modifier",
+            Category::Lo => "Letter, Other",
+            Category::Pc => "Punctuation, Connector",
+            Category::Pd => "Punctuation, Dash",
+            Category::Ps => "Punctuation, Open",
+            Category::Pe => "Punctuation, Close",
+            Category::Pi => "Punctuation, Initial quote (may behave like Ps or Pe depending on usage)",
+            Category::Pf => "Punctuation, Final quote (may behave like Ps or Pe depending on usage)",
+            Category::Po => "Punctuation, Other",
+            Category::Sm => "Symbol, Math",
+            Category::Sc => "Symbol, Currency",
+            Category::Sk => "Symbol, Modifier",
+            Category::So => "Symbol, Other",
+        }
+    }
+}
+
+impl FromStr for Category {
+    
+    type Err = (String,);
+
+    fn from_str(input: &str) -> Result<Category, Self::Err> {
+        match input {
+            "Lu" => Ok(Category::Lu),
+            "Ll" => Ok(Category::Ll),
+            "Lt" => Ok(Category::Lt),
+            "Mn" => Ok(Category::Mn),
+            "Mc" => Ok(Category::Mc),
+            "Me" => Ok(Category::Me),
+            "Nd" => Ok(Category::Nd),
+            "Nl" => Ok(Category::Nl),
+            "No" => Ok(Category::No),
+            "Zs" => Ok(Category::Zs),
+            "Zl" => Ok(Category::Zl),
+            "Zp" => Ok(Category::Zp),
+            "Cc" => Ok(Category::Cc),
+            "Cf" => Ok(Category::Cf),
+            "Cs" => Ok(Category::Cs),
+            "Co" => Ok(Category::Co),
+            "Cn" => Ok(Category::Cn),
+            "Lm" => Ok(Category::Lm),
+            "Lo" => Ok(Category::Lo),
+            "Pc" => Ok(Category::Pc),
+            "Pd" => Ok(Category::Pd),
+            "Ps" => Ok(Category::Ps),
+            "Pe" => Ok(Category::Pe),
+            "Pi" => Ok(Category::Pi),
+            "Pf" => Ok(Category::Pf),
+            "Po" => Ok(Category::Po),
+            "Sm" => Ok(Category::Sm),
+            "Sc" => Ok(Category::Sc),
+            "Sk" => Ok(Category::Sk),
+            "So" => Ok(Category::So),
+            _    => Err((String::from("Unknown category supplied!"),)),
+        }
+    }
+}
+
+impl fmt::Display for Category {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
 }
 
 #[derive(Debug)]
@@ -55,6 +137,12 @@ pub struct UnicodeDatum {
     val: i32,               // references the value in the unicode_values array
     upper: i32,         // uppercase conversion
     lower: i32,         // lowercase conversion
+}
+
+impl UnicodeDatum {
+    pub fn from_idx(idx: usize) -> &'static UnicodeDatum{
+        return &UNICODE_DATA[idx];
+    }
 }
 
 impl UnicodeDatum {
@@ -90,3 +178,13 @@ pub struct UnicodeDatumValue {
     pub num: i64,           // numerator of value
     pub den: i32,           // denomintor of value
 }
+
+impl UnicodeDatumValue {
+    pub fn value_to_str(&self) -> String {
+        if self.den == 1 {
+            return self.num.to_string();
+        }
+        return format!("{}/{}", self.num, self.den);
+    }
+}
+
