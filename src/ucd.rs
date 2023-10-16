@@ -43,6 +43,7 @@ impl Category {
         match self {
             Category::Cc | Category::Cf | Category::Cs | Category::Co | Category::Cn => false,    // control characters are out
             Category::Lm => false,                        // letter modifiers are not printed
+            Category::Mn | Category::Mc | Category::Me => false,
             _ => true,
         }
     }
